@@ -16,7 +16,7 @@ def verif_crs(raster_dir, bands, shp_path):
         ds = None
 
     # Vérifie si toutes les bandes ont le même EPSG
-    if len(set(raster_epsgs)) != 1:
+    if len(set(raster_epsgs)) != 1: # car le set permet de voir les valeurs uniques
         return f"⚠️ Les CRS des rasters ne sont pas tous identiques : {raster_epsgs}"
 
     raster_epsg = raster_epsgs[0]
