@@ -1,5 +1,4 @@
 data/
 libsigma/
-results/
-notebook/
-__pycache__/
+notebook/results/
+sigmam2_telea/
