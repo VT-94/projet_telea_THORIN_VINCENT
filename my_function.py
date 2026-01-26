@@ -1,31 +1,20 @@
 import numpy as np
 
 
-def calcul_navi(img, nodata=-9999.0, idx_b03=1, idx_b05=3):
+def calcul_nari(img, nodata=-9999.0):
     """
-    Calcule le NARI (Normalized Anthocyanin Reflectance Index) pour UNE image multi-bandes.
+    Calcule le NARI (Normalized Anthocyanin Reflectance Index) pour UNE image.
 
-    Parameters
-    ----------
-    img : ndarray (rows, cols, bands)
-        Image Sentinel-2 (float ou convertible) avec les bandes empilées.
+    img : array (lignes, colonnes, bandes)
+        Image avec les bandes spectrales empilées.
     nodata : float
-        Valeur NoData en sortie.
-    idx_b03 : int
-        Index (python) de la bande B03 dans img.
-    idx_b05 : int
-        Index (python) de la bande B05 dans img.
-
-    Returns
-    -------
-    nari : ndarray (rows, cols) float32
-        Carte NARI pour l'image.
+        Valeur NoData voulue en sortie.
     """
 
     img = img.astype("float32", copy=False)
 
-    B03 = img[:, :, idx_b03]
-    B05 = img[:, :, idx_b05]
+    B03 = img[:, :, 1]
+    B05 = img[:, :, 3]
 
     valid = (B03 != 0) & (B05 != 0) & np.isfinite(B03) & np.isfinite(B05)
 
