@@ -1,4 +1,6 @@
+import os
 import numpy as np
+from osgeo import gdal
 
 
 def calcul_nari(img, nodata=-9999.0):
@@ -32,3 +34,35 @@ def calcul_nari(img, nodata=-9999.0):
     nari[valid2] = (inv_B03[valid2] - inv_B05[valid2]) / den[valid2]
 
     return nari
+
+
+def rasterise_gdal(shp_path, ref_image, out_raster, attribute, gdal_dtype, fill_value=0):
+    """
+    Rasterise un shapefile sur la grille d'un raster de référence.
+
+    shp_path   : chemin du shapefile
+    ref_image  : raster de référence (grille)
+    out_raster : raster de sortie (.tif)
+    attribute  : champ à rasteriser
+    gdal_dtype : type GDAL de sortie (ex: gdal.GDT_Int16, gdal.GDT_Int32)
+    fill_value : valeur de fond (par défaut 0)
+    """
+
+    os.makedirs(os.path.dirname(out_raster), exist_ok=True)
+
+    ref_ds = gdal.Open(ref_image)
+
+    cols, rows = ref_ds.RasterXSize, ref_ds.RasterYSize
+    gt, proj = ref_ds.GetGeoTransform(), ref_ds.GetProjection()
+
+    drv = gdal.GetDriverByName("GTiff")
+    out_ds = drv.Create(out_raster, cols, rows, 1, gdal_dtype)
+    out_ds.SetGeoTransform(gt)
+    out_ds.SetProjection(proj)
+    out_ds.GetRasterBand(1).Fill(fill_value)
+
+    # Rasterisation (écrit l'attribut dans le raster)
+    gdal.Rasterize(out_ds, shp_path, attribute=attribute)
+
+    out_ds = None
+    ref_ds = None
