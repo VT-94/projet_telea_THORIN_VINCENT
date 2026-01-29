@@ -84,17 +84,18 @@ def plot_contrib(importances, bands, dates, mode="bands", ax=None):
         for i, b in enumerate(bands):
             idx = np.arange(i, n_bands * n_dates, n_bands)
             contrib[b] = importances[idx].sum()
-        title = "Contribution par bande"
+        title = "Contribution des bandes"
 
     elif mode == "dates":
         for i, d in enumerate(dates):
             idx = slice(i * n_bands, (i + 1) * n_bands)
             contrib[d] = importances[idx].sum()
-        title = "Contribution par date"
+        title = "Contribution des dates"
 
     labels = list(contrib.keys())
     values = list(contrib.values())
 
     ax.bar(labels, values)
     ax.set_title(title)
+    ax.set_ylim(0, 0.2)
     ax.tick_params(axis="x", rotation=45)
