@@ -1,6 +1,7 @@
 import os
 import numpy as np
 from osgeo import gdal
+import matplotlib.pyplot as plt
 
 
 def calcul_nari(img, nodata=-9999.0):
@@ -66,3 +67,34 @@ def rasterise_gdal(shp_path, ref_image, out_raster, attribute, gdal_dtype, fill_
 
     out_ds = None
     ref_ds = None
+
+
+def plot_contrib(importances, bands, dates, mode="bands", ax=None):
+    if ax is None:
+        fig, ax = plt.subplots(figsize=(6, 4))
+
+    import numpy as np
+
+    n_bands = len(bands)
+    n_dates = len(dates)
+
+    contrib = {}
+
+    if mode == "bands":
+        for i, b in enumerate(bands):
+            idx = np.arange(i, n_bands * n_dates, n_bands)
+            contrib[b] = importances[idx].sum()
+        title = "Contribution par bande"
+
+    elif mode == "dates":
+        for i, d in enumerate(dates):
+            idx = slice(i * n_bands, (i + 1) * n_bands)
+            contrib[d] = importances[idx].sum()
+        title = "Contribution par date"
+
+    labels = list(contrib.keys())
+    values = list(contrib.values())
+
+    ax.bar(labels, values)
+    ax.set_title(title)
+    ax.tick_params(axis="x", rotation=45)
