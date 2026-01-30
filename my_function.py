@@ -37,7 +37,12 @@ def calcul_nari(img, nodata=-9999.0):
     return nari
 
 
-def rasterise_gdal(shp_path, ref_image, out_raster, attribute, gdal_dtype, fill_value=0):
+def rasterise_gdal(shp_path,
+                   ref_image,
+                   out_raster,
+                   attribute,
+                   gdal_dtype,
+                   fill_value=0):
     """
     Rasterise un shapefile sur la grille d'un raster de référence.
 
