@@ -1,3 +1,9 @@
+import os
+import numpy as np
+from osgeo import gdal
+import matplotlib.pyplot as plt
+
+
 def calcul_nari(img, nodata=-9999.0):
     """
     Calcule le NARI (Normalized Anthocyanin Reflectance Index) pour UNE image.
